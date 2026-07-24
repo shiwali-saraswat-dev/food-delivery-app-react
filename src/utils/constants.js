@@ -6,6 +6,11 @@
  * - (e.g. replacing the hardcoded logo URL with a locally bundled asset).
  */
 
-const LOGO_URL = "https://www.logodesign.net/logo/smoking-burger-with-lettuce-3624ld.png";
+// App logo image URL, used in Header
+export const LOGO_URL = "https://www.logodesign.net/logo/smoking-burger-with-lettuce-3624ld.png";
 
-export default LOGO_URL; // Default export so LOGO_URL can be imported without curly braces
+// Base CDN path for category-style image assets (o2_assets)
+export const O2_ASSETS = "https://b.zmtcdn.com/data/o2_assets/";
+
+// Base CDN path for dish images, used by CategoryList for items
+export const DISH_IMAGES ="https://b.zmtcdn.com/data/dish_images/";

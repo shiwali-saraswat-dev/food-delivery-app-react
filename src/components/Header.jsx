@@ -1,4 +1,4 @@
-import LOGO_URL from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
+import {LOGO_URL} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 
 const Header = () => {
     return(
