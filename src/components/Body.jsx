@@ -1,28 +1,13 @@
 import CategoryList from "./CategoryList";
 import {O2_ASSETS} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 import {DISH_IMAGES} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
-
-const styleCard = {
-    backgroundColor: "#fff"
-};
-
-const RestaurantCard = (props) => {
-    console.log("props: ", props);
-    return (
-        <div className="res-card" style={styleCard}>
-            <img className="res-logo" src="https://b.zmtcdn.com/data/o2_assets/bf2d0e73add1c206aeeb9fec762438111727708719.png" alt="res-logo" />
-            <h3>Punjabi Angithi</h3>
-            <p>Dum Biryani</p>
-            <h4>₹250 for one</h4>
-            <h4><span>4.7</span> Stars</h4>
-            <h4>45 minutes</h4>
-        </div>
-    )
-};
+import RestaurantCard from "./RestaurantCard";
+import {restaurantsList} from "../utils/mockData";
 
 const Body = () => {
     return (
         <div className="body">
+
             <div className="search"></div>
 
             <div className="cat-container">
@@ -35,14 +20,14 @@ const Body = () => {
             </div>
 
             <div className="res-container">
-                <h1>Restaurants</h1>
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
-                <RestaurantCard />
+                <h1>Food Delivery Restaurants in Delhi NCR</h1>
+                {restaurantsList.map((restaurant) => (
+                    <RestaurantCard key={restaurant.id} resData={restaurant} />
+                ))}
             </div>
+
             <div className="adds"></div>
+
         </div>
     );
 };

@@ -131,64 +131,72 @@ body {
     color: #2d2d2d;
 }
 
+
 .res-container {
-    display: flex;
-    flex-wrap: wrap;
-    margin: 50px 0;
-    padding: 0 40px; /* prevents heading/cards from touching screen edge */
-    gap: 24px;  /* consistent spacing instead of relying on card margins */
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+    padding: 20px 40px;
 }
 
 .res-container h1 {
-    width: 100%; /* forces heading onto its own full-width line */
+    grid-column: 1 / -1;
     text-align: center;
     margin: 0 0 30px;
 }
 
 .res-card {
-    width: 302px;
+    width: 100%;
+    max-width: 320px;
+    margin: 0 auto;
+    height: auto;
     display: flex;
     flex-direction: column;
-    padding: 10px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 6px;
+    padding-bottom: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 8px;
     background-color: #fff;
-    overflow: hidden; /* clip only the image corners, not the text */
+    overflow: hidden;
 }
 
 .res-card:hover {
-    cursor: pointer;
-    border: 1px solid #000;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
 }
 
 .res-logo {
-    width: 280px;
-    height: 200px;
-    object-fit: cover;   /* keeps image proportions consistent, avoids stretching */
-    border-radius: 4px;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 4px 4px 0 0;
     display: block;
+}
+
+.res-card h3, .res-card p, .res-card h4 {
+    margin: 8px 16px;
 }
 
 .res-card > h3 {
     text-align: center;
-    margin: 10px 0 5px;
+    color: #1a1a1a;
 }
 
 .res-card > h4 {
     text-align: left;
-    margin: 6px 0;
+    font-size: 15px;
+    color: #333;
 }
 
 .res-card > h4 > span {
     width: 50px;
     height: 30px;
     border-radius: 4px;
-    padding: 5px 10px;
-    background-color: rgb(38 126 62);
+    padding: 2px 8px;
+    background-color: #2e7d32;
     color: #fff;
-
-    
+    font-size: 13px;
+    font-weight: 600;
 }
 
 .adds{
