@@ -1,4 +1,5 @@
 import { ZMT_CDN } from "./constants.js"; // Import the CDN base URL for dish photos from constants
+import { MEDIA_ASSETS } from "./constants.js"; // Import the CDN base URL for dish photos from constants
 
 // Sample data shape — replace with API response in a real app
 export const restaurantsList = [
@@ -46,5 +47,49 @@ export const restaurantsList = [
     price: 299,
     rating: 4.9,
     time: 25
+  }
+];
+
+// Sample data shape — replace with API response in a real app
+export const topRestaurantChainList = [
+  {
+      id: 1,
+      imgUrl: MEDIA_ASSETS + "v4ryntwbvxuogbwfg3kj",
+      offerTag: "70% OFF UPTO ₹130",
+      name: "Barbeque Nation",
+      rating: 4.3,
+      time: "30-35 mins",
+      cuisine: "North Indian, Barbecue, Kebabs,...",
+      area: "Connaught Place",
+  },
+  {
+      id: 2,
+      imgUrl: MEDIA_ASSETS + "RX_THUMBNAIL/IMAGES/VENDOR/2026/6/15/dba33fb1-390f-4c19-b679-2da827c02d59_608593.JPG",
+      offerTag: "ITEMS AT ₹99",
+      name: "Pizza Hut",
+      rating: 4.3,
+      time: "30-40 mins",
+      cuisine: "Pizzas",
+      area: "Paharganj",
+  },
+  {
+      id: 3,
+      imgUrl: MEDIA_ASSETS + "e0839ff574213e6f35b3899ebf1fc597",
+      offerTag: "70% OFF UPTO ₹140",
+      name: "Chinese Wok",
+      rating: 4.2,
+      time: "35-45 mins",
+      cuisine: "Chinese, Asian, Tibetan, Desserts",
+      area: "Kashmere Gate",
+  },
+  {
+      id: 4,
+      imgUrl: MEDIA_ASSETS + "RX_THUMBNAIL/IMAGES/VENDOR/2026/7/1/6366baa8-5542-4ea5-8164-f3506858f2b2_26719.JPG",
+      offerTag: "ITEMS AT ₹69",
+      name: "Bakingo",
+      rating: 4.6,
+      time: "30-35 mins",
+      cuisine: "Bakery, Desserts, Beverages, Snacks",
+      area: "Karol Bagh",
   }
 ];
