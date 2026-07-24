@@ -3,6 +3,8 @@ import {O2_ASSETS} from "../utils/constants.js"; // Import the app logo URL from
 import {DISH_IMAGES} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 import RestaurantCard from "./RestaurantCard";
 import {restaurantsList} from "../utils/mockData";
+import TopRestaurantChainCard from "./TopRestaurantChainCard";
+import {topRestaurantChainList} from "../utils/mockData";
 
 const Body = () => {
     return (
@@ -28,6 +30,20 @@ const Body = () => {
 
             <div className="adds">
                 <img src="https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto/portal/m/seo/App_download_banner.png" alt="adds" />
+            </div>
+
+            <div className="chain-carousel">
+                <div className="chain-carousel-header">
+                    <h2>Top restaurant chains in Delhi</h2>
+                </div>
+
+                <div className="chain-carousel-track">
+                    {/* Loops over topRestaurantChainList and renders one card per item — 
+                    no manual indexing, so the list can grow/shrink safely */}
+                    {topRestaurantChainList.map((restaurant) => (
+                        <TopRestaurantChainCard key={restaurant.id} resData={restaurant} />
+                    ))}
+                </div>
             </div>
 
         </div>

@@ -134,7 +134,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
     gap: 24px;
-    padding: 20px 40px;
+    padding: 40px;
 }
 
 .res-container h1 {
@@ -204,12 +204,120 @@ body {
     max-width: 100%;
     height: auto;
     padding: 40px;
-    box-shadow: 0 2px 6px rgba(188, 186, 186, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .adds img{
     width: 100%;
 }
+
+.chain-carousel {
+    padding: 24px 16px;
+    max-width: 1400px;
+    margin: 30px auto;
+}
+
+.chain-carousel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.chain-carousel-header h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin: 0;
+}
+
+.chain-carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.chain-carousel-track::-webkit-scrollbar {
+    display: none;
+}
+
+.chain-card {
+    flex: 0 0 327px;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+.chain-card-img-wrap {
+    position: relative;
+    width: 100%;
+    height: 190px;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.chain-card-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.chain-card-offer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 24px 12px 10px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.chain-card-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: #1c1c1c;
+    margin: 0 0 4px;
+}
+
+.chain-card-meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #3d3d3d;
+    margin: 0 0 4px;
+}
+
+.chain-card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    background-color: #267e3e;
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.chain-card-cuisine, .chain-card-area {
+    font-size: 14px;
+    color: #7e7e7e;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 
 .footer {
     background-color: #1f1f1f;

@@ -17,3 +17,6 @@ export const DISH_IMAGES ="https://b.zmtcdn.com/data/dish_images/";
 
 // Base CDN URL for restaurant dish photos — prepended to each image's relative path
 export const ZMT_CDN = "https://b.zmtcdn.com/data/dish_photos/";
+
+// Base CDN URL for restaurant chain images (Swiggy media assets), used in mockData.js
+export const MEDIA_ASSETS = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
