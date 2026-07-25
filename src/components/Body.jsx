@@ -1,16 +1,33 @@
-import CategoryList from "./CategoryList";
+import {useState} from "react";
 import {O2_ASSETS} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 import {DISH_IMAGES} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
+import Filter from "./Filter";
+import CategoryList from "./CategoryList";
 import RestaurantCard from "./RestaurantCard";
 import {restaurantsList} from "../utils/mockData";
 import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import {topRestaurantChainList} from "../utils/mockData";
 
 const Body = () => {
+    // Holds the currently displayed list — starts as the full mock data,
+    // gets replaced with a filtered subset when the top-rated filter is applied
+    const [restaurants, setRestaurants] = useState(restaurantsList);
+
+    // Called by Search when the filter button is toggled.
+    // true  -> show only restaurants rated 4.5+
+    // false -> restore the full original list
+    const handleTopRatedFilter = (isFiltered) => {
+        if (isFiltered) {
+            setRestaurants(restaurantsList.filter((r) => r.rating >= 4.5));
+        } else {
+            setRestaurants(restaurantsList);
+        }
+    };
+
     return (
         <div className="body">
 
-            <div className="search"></div>
+            <Filter onFilterTopRated={handleTopRatedFilter} />
 
             <div className="cat-container">
                 <h1>Inspiration for your first order</h1>
@@ -23,7 +40,7 @@ const Body = () => {
 
             <div className="res-container">
                 <h1>Food Delivery Restaurants in Delhi NCR</h1>
-                {restaurantsList.map((restaurant) => (
+                {restaurants.map((restaurant) => (
                     <RestaurantCard key={restaurant.id} resData={restaurant} />
                 ))}
             </div>
