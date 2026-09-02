@@ -1,17 +1,22 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {O2_ASSETS} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 import {DISH_IMAGES} from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 import Filter from "./Filter";
-import CategoryList from "./CategoryList";
+import CategoryChip from "./CategoryChip";
 import RestaurantCard from "./RestaurantCard";
-import {restaurantsList} from "../utils/mockData";
 import TopRestaurantChainCard from "./TopRestaurantChainCard";
-import {topRestaurantChainList} from "../utils/mockData";
 
 const Body = () => {
+    const [categoriesList, setCategoriesList] = useState([]);
+
+    // Generic Restaurants Listing
     // Holds the currently displayed list — starts as the full mock data,
     // gets replaced with a filtered subset when the top-rated filter is applied
-    const [restaurants, setRestaurants] = useState(restaurantsList);
+    const [restaurantsList, setRestaurantsList] = useState([]);
+
+    // Top restaurant chains in Delhi
+    const [topRestChainsList, setTopRestChainsList] = useState([]);
+
 
     // Called by Search when the filter button is toggled.
     // true  -> show only restaurants rated 4.5+
@@ -24,6 +29,41 @@ const Body = () => {
         }
     };
 
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const fetchData = async () => {
+        const data = await fetch(
+        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+        );
+        const json = await data.json();
+        // console.log("swiggy json: ", json);
+
+        const categoryCard = json?.data?.cards?.find(
+            (c) => c?.card?.card?.id === "whats_on_your_mind"
+        );
+        // Extract from imageGridCards.info
+        const catData = categoryCard?.card?.card?.imageGridCards?.info || [];
+        setCategoriesList(catData);
+
+        // Find the one Generic Restaurant Card that actually holds a restaurant grid, wherever it happens to sit in the array this time
+        const restaurantCard = json?.data?.cards?.find(
+        (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
+        );
+        // console.log('restaurantCard : ', restaurantCard);
+        const restData = restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+        // console.log('restData : ', restData);
+        setRestaurantsList(restData);
+
+        const topChainCard = json?.data?.cards?.find(
+            (c) => c?.card?.card?.id === "top_brands_for_you"
+        );
+        const topChainData = topChainCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+        console.log('topChainData : ', topChainData);
+        setTopRestChainsList(topChainData);
+    };
+
     return (
         <div className="body">
 
@@ -31,18 +71,24 @@ const Body = () => {
 
             <div className="cat-container">
                 <h1>Inspiration for your first order</h1>
-                <CategoryList imgUrl={O2_ASSETS + "bf2d0e73add1c206aeeb9fec762438111727708719.png"} name="Biryani" />
-                <CategoryList imgUrl={O2_ASSETS + "d0bd7c9405ac87f6aa65e31fe55800941632716575.png"} name="Pizza" />
-                <CategoryList imgUrl={DISH_IMAGES + "ccb7dc2ba2b054419f805da7f05704471634886169.png"} name="Burger" />
-                <CategoryList imgUrl={DISH_IMAGES + "d5ab931c8c239271de45e1c159af94311634805744.png"} name="Cake"/>
-                <CategoryList imgUrl={DISH_IMAGES + "c2f22c42f7ba90d81440a88449f4e5891634806087.png"} name="Roll"/>
+                <div className="cat-chip-list">
+                    {categoriesList
+                        .slice(0, 8)       // Only first 8, ignore the rest
+                        .map((category) => (
+                            <CategoryChip key={category.id} catData={category} />
+                        )
+                    )}
+                </div>
             </div>
 
             <div className="res-container">
                 <h1>Food Delivery Restaurants in Delhi NCR</h1>
-                {restaurants.map((restaurant) => (
-                    <RestaurantCard key={restaurant.id} resData={restaurant} />
-                ))}
+                {restaurantsList
+                    .slice(0, 10)       // Only first 10, ignore the rest
+                    .map((restaurant) => (
+                        <RestaurantCard key={restaurant.info.id} restData={restaurant.info} />
+                    )
+                )}
             </div>
 
             <div className="adds">
@@ -57,9 +103,12 @@ const Body = () => {
                 <div className="chain-carousel-track">
                     {/* Loops over topRestaurantChainList and renders one card per item — 
                     no manual indexing, so the list can grow/shrink safely */}
-                    {topRestaurantChainList.map((restaurant) => (
-                        <TopRestaurantChainCard key={restaurant.id} resData={restaurant} />
-                    ))}
+                    {topRestChainsList
+                        .slice(0, 4)       // Only first 4, ignore the rest
+                        .map((topRestChain) => (
+                            <TopRestaurantChainCard key={topRestChain.info.id} topChainData={topRestChain.info} />
+                        )
+                    )}
                 </div>
             </div>
 

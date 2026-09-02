@@ -9,6 +9,10 @@
 // App logo image URL, used in Header
 export const LOGO_URL = "https://www.logodesign.net/logo/smoking-burger-with-lettuce-3624ld.png";
 
+export const CAT_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_208,h_208,c_fit/";
+
+export const REST_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
+
 // Base CDN path for category-style image assets (o2_assets)
 export const O2_ASSETS = "https://b.zmtcdn.com/data/o2_assets/";
 
