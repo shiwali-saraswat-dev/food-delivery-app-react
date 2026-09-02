@@ -40,6 +40,7 @@ const Body = () => {
             "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
         );
         const json = await data.json();
+        console.log('json: ', json);
 
         const categoryCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "whats_on_your_mind"
