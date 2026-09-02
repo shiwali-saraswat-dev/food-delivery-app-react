@@ -1,18 +1,26 @@
+import { REST_IMG_URL } from "../utils/constants.js";
+
 // TopRestaurantChainCard component — renders one restaurant chain's data, destructured from props
-const TopRestaurantChainCard = (props) => {
-    const { resData } = props;
+const TopRestaurantChainCard = ({ topChainData }) => {
     return (
         <div className="chain-card">
             <div className="chain-card-img-wrap">
-                <img className="chain-card-img" src={resData.imgUrl} alt={resData.name} />
-                <span className="chain-card-offer">{resData.offerTag}</span>
+                <img
+                    className="chain-card-img"
+                    src={`${REST_IMG_URL}${topChainData.cloudinaryImageId}`}
+                    alt={topChainData.name}
+                />
+                <span className="chain-card-offer">{topChainData.offerTag}</span>
             </div>
-            <h3 className="chain-card-name">{resData.name}</h3>
+            <h3 className="chain-card-name">{topChainData.name}</h3>
             <p className="chain-card-meta">
-                <span className="chain-card-rating">★ {resData.rating}</span> • {resData.time}
+                <span className="chain-card-rating">★ {topChainData.avgRating}</span> •{" "}
+                {topChainData.sla?.deliveryTime ? `${topChainData.sla.deliveryTime} minutes` : "—"}
             </p>
-            <p className="chain-card-cuisine">{resData.cuisine}</p>
-            <p className="chain-card-area">{resData.area}</p>
+            <p className="chain-card-cuisine">
+                {topChainData.cuisines?.join(", ") || "Cuisines not listed"}
+            </p>
+            <p className="chain-card-area">{topChainData.area}</p>
         </div>
     );
 };
