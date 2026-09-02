@@ -35,10 +35,11 @@ const Body = () => {
 
     const fetchData = async () => {
         const data = await fetch(
-        "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+            // corsproxy.io / proxy.corsfix.com hit rate limits — using direct fetch for now
+            // fallback: https://proxy.corsfix.com/?YOUR_API_URL
+            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
         );
         const json = await data.json();
-        // console.log("swiggy json: ", json);
 
         const categoryCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "whats_on_your_mind"
@@ -51,16 +52,13 @@ const Body = () => {
         const restaurantCard = json?.data?.cards?.find(
         (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
         );
-        // console.log('restaurantCard : ', restaurantCard);
         const restData = restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-        // console.log('restData : ', restData);
         setRestaurantsList(restData);
 
         const topChainCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "top_brands_for_you"
         );
         const topChainData = topChainCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-        console.log('topChainData : ', topChainData);
         setTopRestChainsList(topChainData);
     };
 
