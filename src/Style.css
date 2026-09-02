@@ -169,6 +169,55 @@ body {
 }
 /* ------------------------- Header ends ---------------------- */
 
+/* ------------------------- Search starts ---------------------- */
+.search-container {
+  display: flex;
+  align-items: center;
+  border: 2px solid #c48e34f5;
+  border-radius: 999px;
+  margin: 0 10px;
+  padding: 4px 4px 4px 20px;
+  background: #fff;
+  min-width: 280px;
+}
+
+.search-box {
+  border: none;
+  outline: none;
+  flex: 1;
+  font-size: 15px;
+  color: #333;
+  background: transparent;
+  padding: 8px 0;
+}
+
+.search-box::placeholder {
+  color: #9a9a9a;
+}
+
+/* Round orange search button with the icon inside */
+.search-btn {
+  border: none;
+  outline: none;
+  background: #e8a04c;
+  color: #fff;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s ease;
+}
+
+.search-btn:hover {
+  background: #d88f3a;
+}
+/* --------------------------- Search ends ------------------------ */
+
 /* ------------------------- Filter starts ---------------------- */
 .filter{
     display: flex;
@@ -185,6 +234,7 @@ body {
     color: #c48e34f5;
     border: 2px solid #c48e34f5;
     border-radius: 30px;
+    margin: 0 10px;
     padding: 10px 24px;
     font-size: 15px;
     font-weight: 600;

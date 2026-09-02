@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { O2_ASSETS, DISH_IMAGES } from "../utils/constants.js";
 import Filter from "./Filter";
 import CategoryChip from "./CategoryChip";
 import RestaurantCard from "./RestaurantCard";
@@ -7,32 +6,21 @@ import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import Shimmer from "./Shimmer";
 
 const Body = () => {
-    // Shimmer UI — true while the initial API call is in flight
     const [isLoading, setIsLoading] = useState(true);
-
     const [categoriesList, setCategoriesList] = useState([]);
 
-    // Currently displayed restaurant list — can be filtered down by rating
-    const [restaurantsList, setRestaurantsList] = useState([]);
-
-    // Untouched copy of the full list — needed to RESTORE after filtering,
-    // since restaurantsList itself gets overwritten when filtered
+    // The ONE untouched source of truth — never filtered/mutated directly
     const [allRestaurantsList, setAllRestaurantsList] = useState([]);
+
+    // The ONE list actually rendered — always derived from allRestaurantsList
+    const [filteredRestaurants, setFilteredRestaurants] = useState([]);
 
     const [topRestChainsList, setTopRestChainsList] = useState([]);
 
-    // Called by Search when the filter button is toggled.
-    // true  -> show only restaurants rated 4.5+
-    // false -> restore the full original list (from allRestaurantsList)
-    const handleTopRatedFilter = (isFiltered) => {
-        if (isFiltered) {
-            setRestaurantsList(
-                allRestaurantsList.filter((r) => r.info.avgRating >= 4.5)
-            );
-        } else {
-            setRestaurantsList(allRestaurantsList);
-        }
-    };
+    // Filter state — lifted here so BOTH the button's active look
+    // AND the actual filtering logic share the same source of truth
+    const [isTopRatedActive, setIsTopRatedActive] = useState(false);
+    const [searchText, setSearchText] = useState("");
 
     useEffect(() => {
         fetchData();
@@ -43,7 +31,6 @@ const Body = () => {
             "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
         );
         const json = await data.json();
-        console.log("json: ", json);
 
         const categoryCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "whats_on_your_mind"
@@ -55,8 +42,9 @@ const Body = () => {
             (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
         );
         const restData = restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-        setRestaurantsList(restData);
-        setAllRestaurantsList(restData); // keep an untouched copy for filter reset
+
+        setAllRestaurantsList(restData);   // untouched original
+        setFilteredRestaurants(restData);  // initially, show everything
 
         const topChainCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "top_brands_for_you"
@@ -64,33 +52,86 @@ const Body = () => {
         const topChainData = topChainCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
         setTopRestChainsList(topChainData);
 
-        // All data has arrived — switch off the shimmer/loading state
         setIsLoading(false);
     };
 
+    /**
+     * Recomputes filteredRestaurants from scratch, starting from the
+     * ORIGINAL allRestaurantsList every time — never filters on top of
+     * a previously filtered list. This is what makes toggling rating
+     * filter + typing a search term compose correctly together,
+     * instead of compounding or going stale.
+     */
+    const applyFilters = (topRatedOn, text) => {
+        let result = allRestaurantsList;
+
+        if (topRatedOn) {
+            result = result.filter((r) => r.info?.avgRating >= 4.5);
+        }
+
+        if (text.trim()) {
+            const query = text.trim().toLowerCase();
+            result = result.filter((r) => r.info?.name?.toLowerCase().includes(query));
+        }
+
+        setFilteredRestaurants(result);
+    };
+
+    // Toggles the "Top Rated" filter on/off, re-applying search on top
+    const handleTopRatedFilter = () => {
+        const next = !isTopRatedActive;
+        setIsTopRatedActive(next);
+        applyFilters(next, searchText);
+    };
+
+    // Just updates the input's value as the user types (controlled input)
+    const handleSearchChange = (text) => {
+        setSearchText(text);
+        applyFilters(isTopRatedActive, text); // filter immediately with the fresh value
+    };
+
+    // Triggered on search button click / Enter key
+    // — re-applies both rating filter + the current search text together
+    const handleSearch = () => {
+        applyFilters(isTopRatedActive, searchText);
+    };
+
+    // Full reset — clears search text, turns off rating filter,
+    // restores the displayed list back to the original untouched data
+    const resetFilter = () => {
+        setSearchText("");
+        setIsTopRatedActive(false);
+        setFilteredRestaurants(allRestaurantsList);
+    };
+
     return isLoading ? (
-    // ---- SHIMMER STATE ----
-    <div className="body">
-        <Shimmer type="pill" count={6} />
-        <div className="cat-container">
-            <h1>Inspiration for your first order</h1>
-            <Shimmer type="pill" count={8} />
-        </div>
-        <div className="res-container">
-            <h1>Food Delivery Restaurants in Delhi NCR</h1>
-            <Shimmer type="card" count={5} />
-        </div>
-        <div className="chain-carousel">
-            <div className="chain-carousel-header">
-                <h2>Top restaurant chains in Delhi</h2>
-            </div>
-            <Shimmer type="chain-card" count={4} />
-        </div>
-    </div>
-    ) : (
-        // ---- LOADED STATE ----
         <div className="body">
-            <Filter onFilterTopRated={handleTopRatedFilter} />
+            <Shimmer type="pill" count={6} />
+            <div className="cat-container">
+                <h1>Inspiration for your first order</h1>
+                <Shimmer type="pill" count={8} />
+            </div>
+            <div className="res-container">
+                <h1>Food Delivery Restaurants in Delhi NCR</h1>
+                <Shimmer type="card" count={5} />
+            </div>
+            <div className="chain-carousel">
+                <div className="chain-carousel-header">
+                    <h2>Top restaurant chains in Delhi</h2>
+                </div>
+                <Shimmer type="chain-card" count={4} />
+            </div>
+        </div>
+    ) : (
+        <div className="body">
+            <Filter
+                searchText={searchText}
+                onSearchChange={handleSearchChange}
+                onSearch={handleSearch}
+                isTopRatedActive={isTopRatedActive}
+                onToggleTopRated={handleTopRatedFilter}
+                onReset={resetFilter}
+            />
 
             <div className="cat-container">
                 <h1>Inspiration for your first order</h1>
@@ -103,9 +144,15 @@ const Body = () => {
 
             <div className="res-container">
                 <h1>Food Delivery Restaurants in Delhi NCR</h1>
-                {restaurantsList.slice(0, 10).map((restaurant) => (
-                    <RestaurantCard key={restaurant.info.id} restData={restaurant.info} />
-                ))}
+                {filteredRestaurants.length === 0 ? (
+                    <p>No restaurants match your search.</p>
+                ) : (
+                    filteredRestaurants
+                        .slice(0, 10)
+                        .map((restaurant) => (
+                            <RestaurantCard key={restaurant.info.id} restData={restaurant.info} />
+                        ))
+                )}
             </div>
 
             <div className="adds">
