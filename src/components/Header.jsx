@@ -1,6 +1,9 @@
 import { useState, useEffect } from "react";
 import { LOGO_URL } from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 
+// NavLink — like <Link> but adds "active" class automatically when its route matches the current URL
+import { NavLink } from "react-router";
+
 const Header = () => {
     // Tracks the current label of the auth button.
     // "Login" = user is logged out, "Logout" = user is logged in.
@@ -33,9 +36,9 @@ const Header = () => {
 
             <div className="nav-items">
                 <ul>
-                    <li>Home</li>
-                    <li>About Us</li>
-                    <li>Contact Us</li>
+                    <li><NavLink  to="/" >Home</NavLink ></li>
+                    <li><NavLink  to="/about" >About Us</NavLink ></li>
+                    <li><NavLink  to="/contact">Contact Us</NavLink ></li>
 
                     <div className="cart">
                         <div className="cart-badge">0</div>
