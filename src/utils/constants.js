@@ -13,14 +13,13 @@ export const CAT_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/
 
 export const REST_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
-// Base CDN path for category-style image assets (o2_assets)
-export const O2_ASSETS = "https://b.zmtcdn.com/data/o2_assets/";
+// Base coordinates — Delhi NCR (update to dynamic user location later)
+export const LAT = "28.63270";
+export const LNG = "77.21980";
 
-// Base CDN path for dish images, used by CategoryList for items
-export const DISH_IMAGES ="https://b.zmtcdn.com/data/dish_images/";
+// Home page — fetches restaurant listing and category chips
+export const SWIGGY_HOME_API = `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`;
 
-// Base CDN URL for restaurant dish photos — prepended to each image's relative path
-export const ZMT_CDN = "https://b.zmtcdn.com/data/dish_photos/";
-
-// Base CDN URL for restaurant chain images (Swiggy media assets), used in mockData.js
-export const MEDIA_ASSETS = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
+// Category page — fetches restaurants filtered by collection ID and tags
+export const SWIGGY_CATEGORY_API = (catId, tags = "") =>
+    `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&collection=${catId}&tags=${encodeURIComponent(tags)}&sortBy=&filters=&type=rcv2&offset=0`;
