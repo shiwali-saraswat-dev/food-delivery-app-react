@@ -31,14 +31,16 @@ const Header = () => {
     return (
         <div className="header">
             <div className="logo-container">
-                <img className="logo" src={LOGO_URL} height="100" style={{ marginBottom: 20 }} />
+                <NavLink to="/">
+                    <img className="logo" src={LOGO_URL} height="100" style={{ marginBottom: 20 }} />
+                </NavLink>
             </div>
 
             <div className="nav-items">
                 <ul>
-                    <li><NavLink  to="/" >Home</NavLink ></li>
-                    <li><NavLink  to="/about" >About Us</NavLink ></li>
-                    <li><NavLink  to="/contact">Contact Us</NavLink ></li>
+                    <li><NavLink to="/">Home</NavLink ></li>
+                    <li><NavLink to="/about">About Us</NavLink ></li>
+                    <li><NavLink to="/contact">Contact Us</NavLink ></li>
 
                     <div className="cart">
                         <div className="cart-badge">0</div>

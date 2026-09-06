@@ -19,10 +19,7 @@ import Footer from "./components/Footer";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import Error from "./components/Error";
-
-// Import the user icon image as a module; 
-// bundlers(Parcel/Vite) resolve this to a usable URL pointing to the final bundled asset
-import userIcon from "./assets/user-icon.png";
+import CategoryRestaurant from "./components/CategoryRestaurant";
 
 /**
  * 
@@ -85,11 +82,14 @@ const appRouter = createBrowserRouter(
                 {
                     path: "/contact", // /food-delivery-app-react/contact
                     element: <Contact />,
+                },
+                {
+                    path: "/category/:catId", // /food-delivery-app-react/category/123
+                    element: <CategoryRestaurant />,
                 }
             ],
             errorElement: <Error />,  // shown on 404 or any route-level error
         },
-        
     ],
     { basename: "/food-delivery-app-react" } // base path for GitHub Pages deployment
 );

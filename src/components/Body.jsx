@@ -4,6 +4,7 @@ import CategoryChip from "./CategoryChip";
 import RestaurantCard from "./RestaurantCard";
 import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import Shimmer from "./Shimmer";
+import { SWIGGY_HOME_API } from "../utils/constants.js";
 
 const Body = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -27,15 +28,14 @@ const Body = () => {
     }, []);
 
     const fetchData = async () => {
-        const data = await fetch(
-            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.63270&lng=77.21980&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-        );
+        const data = await fetch(SWIGGY_HOME_API);
         const json = await data.json();
 
         const categoryCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "whats_on_your_mind"
         );
         const catData = categoryCard?.card?.card?.imageGridCards?.info || [];
+        console.log('catData: ', catData);
         setCategoriesList(catData);
 
         const restaurantCard = json?.data?.cards?.find(
