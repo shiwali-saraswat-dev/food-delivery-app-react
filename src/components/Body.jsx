@@ -35,7 +35,6 @@ const Body = () => {
             (c) => c?.card?.card?.id === "whats_on_your_mind"
         );
         const catData = categoryCard?.card?.card?.imageGridCards?.info || [];
-        console.log('catData: ', catData);
         setCategoriesList(catData);
 
         const restaurantCard = json?.data?.cards?.find(

@@ -1198,3 +1198,68 @@ body {
   border: 1px solid #eee;
 }
 /* ------------------------- Error Page ends ----------------------- */
+
+/* -------------------- Restaurant Menu starts --------------------- */
+.page {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 20px 16px;
+}
+
+.back {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #666;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: inherit;
+    margin-bottom: 16px;
+}
+
+.back:hover { 
+    color: #1a1a1a; 
+}
+
+.hero {
+    background: #fff;
+    border-radius: 12px;
+    border: 1px solid #eee;
+    padding: 20px;
+    margin-bottom: 12px;
+}
+
+.hero-name {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.hero-cuisine {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 12px;
+}
+
+.hero-pills {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pill {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    border: 1px solid #ddd;
+    color: #555;
+}
+
+.pill.green {
+    background: #f0faf0;
+    color: #2e7d32;
+    border-color: #a5d6a7;
+}
+/* --------------------- Restaurant Menu ends ---------------------- */

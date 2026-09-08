@@ -23,3 +23,11 @@ export const SWIGGY_HOME_API = `https://www.swiggy.com/dapi/restaurants/list/v5?
 // Category page — fetches restaurants filtered by collection ID and tags
 export const SWIGGY_CATEGORY_API = (catId, tags = "") =>
     `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&collection=${catId}&tags=${encodeURIComponent(tags)}&sortBy=&filters=&type=rcv2&offset=0`;
+
+export const SWIGGY_RESTAURANT_API = (resId) => 
+    `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${resId}&catalog_qa=undefined`;
+
+export const MENU_API =
+  "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5807394&lng=77.3982086&restaurantId=";
+
+export const SWIGGY_RESTAURANT_MENU = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5807394&lng=77.3982086&restaurantId=392432&catalog_qa=undefined&query=Chole%20Bhature&submitAction=ENTER";
