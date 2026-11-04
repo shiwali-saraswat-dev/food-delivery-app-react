@@ -1199,67 +1199,199 @@ body {
 }
 /* ------------------------- Error Page ends ----------------------- */
 
-/* -------------------- Restaurant Menu starts --------------------- */
-.page {
-    max-width: 700px;
+/* ------------------------- Restaurant Menu starts ----------------------- */
+
+.menu-page {
+    max-width: 760px;
     margin: 0 auto;
-    padding: 20px 16px;
+    padding: 24px 16px 48px;
 }
 
-.back {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 13px;
-    color: #666;
-    cursor: pointer;
-    background: none;
-    border: none;
-    font-family: inherit;
-    margin-bottom: 16px;
+/* ---- Header ---- */
+.menu-header {
+    text-align: center;
+    margin-bottom: 24px;
 }
 
-.back:hover { 
-    color: #1a1a1a; 
+.menu-title {
+    margin: 0 0 6px;
+    font-size: 2rem;
+    font-weight: 700;
+    color: #282c3f;
 }
 
-.hero {
+.menu-meta {
+    margin: 0;
+    font-size: 1rem;
+    color: #686b78;
+}
+
+.menu-notice {
+    display: inline-block;
+    margin: 14px 0 0;
+    padding: 8px 14px;
+    font-size: 0.85rem;
+    color: #7a5b00;
+    background: #fff4cc;
+    border: 1px solid #f2d36b;
+    border-radius: 8px;
+}
+
+/* ---- Category accordion ---- */
+.menu-category {
+    margin-bottom: 14px;
+    overflow: hidden;
     background: #fff;
     border-radius: 12px;
-    border: 1px solid #eee;
-    padding: 20px;
-    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
-.hero-name {
-    font-size: 22px;
-    font-weight: 700;
-    margin-bottom: 4px;
-}
-
-.hero-cuisine {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 12px;
-}
-
-.hero-pills {
+.menu-category-header {
     display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 16px 20px;
+    font: inherit;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-.pill {
-    font-size: 12px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    border: 1px solid #ddd;
-    color: #555;
+.menu-category-header:hover {
+    background: #fafafa;
 }
 
-.pill.green {
-    background: #f0faf0;
-    color: #2e7d32;
-    border-color: #a5d6a7;
+.menu-category-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #282c3f;
 }
-/* --------------------- Restaurant Menu ends ---------------------- */
+
+.menu-chevron {
+    font-size: 1.3rem;
+    color: #686b78;
+    transition: transform 0.2s ease;
+}
+
+.menu-chevron.open {
+    transform: rotate(180deg);
+}
+
+/* ---- Items ---- */
+.menu-items {
+    padding: 0 20px 8px;
+    border-top: 1px solid #eee;
+}
+
+.menu-item {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 18px 0;
+    border-bottom: 1px dashed #e0e0e0;
+}
+
+.menu-item:last-child {
+    border-bottom: none;
+}
+
+.menu-item-info {
+    flex: 1;
+    min-width: 0;
+    text-align: left;
+}
+
+.menu-item-name {
+    margin: 6px 0 2px;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #3e4152;
+}
+
+.menu-item-price {
+    margin: 0 0 8px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #3e4152;
+}
+
+.menu-item-desc {
+    margin: 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7e808c;
+}
+
+.menu-item-img {
+    flex-shrink: 0;
+    width: 118px;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+.menu-item-img--placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: #f1f1f4;
+    color: #b0b3bd;
+}
+
+/* ---- Veg / non-veg marker ---- */
+.veg-mark {
+    display: inline-block;
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border: 2px solid;
+    border-radius: 3px;
+}
+
+.veg-mark::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.veg-mark.veg {
+    border-color: #0f8a65;
+}
+.veg-mark.veg::after {
+    background: #0f8a65;
+}
+
+.veg-mark.non-veg {
+    border-color: #b3261e;
+}
+.veg-mark.non-veg::after {
+    background: #b3261e;
+}
+
+/* ---- Mobile ---- */
+@media (max-width: 600px) {
+    .menu-title {
+        font-size: 1.5rem;
+    }
+
+    .menu-item-img {
+        width: 90px;
+        height: 76px;
+    }
+
+    .menu-category-header,
+    .menu-items {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+/* ------------------------- Restaurant Menu ends ----------------------- */

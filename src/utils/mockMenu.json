@@ -1,0 +1,50 @@
+{
+  "cards": [
+    {
+      "card": {
+        "card": {
+          "info": {
+            "id": "000000",
+            "name": "Sample Restaurant",
+            "cuisines": ["North Indian", "Chinese"],
+            "costForTwoMessage": "₹400 for two"
+          }
+        }
+      }
+    },
+    {
+      "groupedCard": {
+        "cardGroupMap": {
+          "REGULAR": {
+            "cards": [
+              {
+                "card": {
+                  "card": {
+                    "@type": "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory",
+                    "title": "Recommended",
+                    "itemCards": [
+                      { "card": { "info": { "id": "mock-1", "name": "Paneer Butter Masala", "price": 28000, "description": "Creamy tomato gravy with paneer cubes.", "isVeg": 1 } } },
+                      { "card": { "info": { "id": "mock-2", "name": "Butter Naan", "price": 6000, "description": "Soft tandoor-baked bread.", "isVeg": 1 } } }
+                    ]
+                  }
+                }
+              },
+              {
+                "card": {
+                  "card": {
+                    "@type": "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory",
+                    "title": "Chinese",
+                    "itemCards": [
+                      { "card": { "info": { "id": "mock-3", "name": "Veg Hakka Noodles", "price": 18000, "description": "Wok-tossed noodles with vegetables.", "isVeg": 1 } } },
+                      { "card": { "info": { "id": "mock-4", "name": "Chilli Chicken", "price": 24000, "description": "Spicy indo-Chinese chicken.", "isVeg": 0 } } }
+                    ]
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ]
+}

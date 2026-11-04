@@ -1,39 +1,46 @@
 import { useEffect, useState } from "react";
-import { MENU_API } from "./constants.js"; // was "./constants.JS" — harmless on Windows, but fragile; Linux/Mac deploys are case-sensitive
+import { MENU_API } from "./constants.js";
+import mockMenu from "./mockMenu.json";
 
 const useRestaurantMenu = (resId) => {
   const [resInfo, setResInfo] = useState(null);
-  const [loadError, setLoadError] = useState(false);
+  const [isMock, setIsMock] = useState(false);
 
   useEffect(() => {
+    let ignore = false; // prevents setting state if the user navigates away mid-fetch
+
+    const fetchData = async () => {
+      setResInfo(null);
+      setIsMock(false);
+
+      try {
+        const res = await fetch(MENU_API(resId));
+        if (!res.ok || res.status === 202) throw new Error(`HTTP ${res.status}`);
+
+        const text = await res.text();
+        if (!text) throw new Error("Empty response body");
+
+        const json = JSON.parse(text);
+        if (!json?.data?.cards) throw new Error("Unexpected response shape");
+
+        if (!ignore) setResInfo(json.data);
+      } catch (err) {
+        // console.warn, not console.error: Parcel's overlay only pops up on console.error
+        console.warn("Menu API failed, using mock menu:", err.message);
+        if (!ignore) {
+          setResInfo(mockMenu);
+          setIsMock(true);
+        }
+      }
+    };
+
     fetchData();
-  }, [resId]); // was `[]` — without resId here, navigating between two different restaurants' menus would never re-fetch
+    return () => {
+      ignore = true;
+    };
+  }, [resId]);
 
-  const fetchData = async () => {
-    const res = await fetch(MENU_API + resId);
-
-    if (res.status === 202) {
-      console.error("Empty 202 — Swiggy's bot-detection wall, same as last message. Not a code bug.");
-      setLoadError(true);
-      return;
-    }
-
-    const text = await res.text(); // read as text FIRST — an empty body can't crash a string read
-    if (!text) {
-      console.error("Empty response body (status was", res.status + ") — likely the same wall.");
-      setLoadError(true);
-      return;
-    }
-
-    try {
-      setResInfo(JSON.parse(text).data);
-    } catch (err) {
-      console.error("Response wasn't valid JSON:", text.slice(0, 200));
-      setLoadError(true);
-    }
-  };
-
-  return { resInfo, loadError };
+  return { resInfo, isMock };
 };
 
 export default useRestaurantMenu;
