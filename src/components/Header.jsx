@@ -3,6 +3,7 @@ import { LOGO_URL } from "../utils/constants.js"; // Import the app logo URL fro
 
 // NavLink — like <Link> but adds "active" class automatically when its route matches the current URL
 import { NavLink } from "react-router";
+import { OfflineBadge } from "./OfflineIndicator";
 
 const Header = () => {
     // Tracks the current label of the auth button.
@@ -41,6 +42,7 @@ const Header = () => {
                     <li><NavLink to="/">Home</NavLink ></li>
                     <li><NavLink to="/about">About Us</NavLink ></li>
                     <li><NavLink to="/contact">Contact Us</NavLink ></li>
+                    <li><OfflineBadge /></li>
 
                     <div className="cart">
                         <div className="cart-badge">0</div>
