@@ -21,6 +21,7 @@ import Contact from "./components/Contact";
 import Error from "./components/Error";
 import CategoryRestaurant from "./components/CategoryRestaurant";
 import RestaurantMenu from "./components/RestaurantMenu";
+import { OfflineBanner } from "./components/OfflineIndicator";
 
 /**
  * 
@@ -56,6 +57,7 @@ const AppLayout = () => {
     return (
         <div className="app">
             <Header />
+            <OfflineBanner />
             <Outlet /> {/* matched child route renders here — Body / About / Contact */}
             <Footer />
         </div>

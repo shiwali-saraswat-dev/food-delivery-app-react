@@ -5,6 +5,8 @@ import RestaurantCard from "./RestaurantCard";
 import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import Shimmer from "./Shimmer";
 import { SWIGGY_HOME_API } from "../utils/constants.js";
+import useOnlineStatus from "../utils/useOnlineStatus";
+import Offline from "./Offline";
 
 const Body = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -103,6 +105,10 @@ const Body = () => {
         setFilteredRestaurants(allRestaurantsList);
     };
 
+    const onlineStatus = useOnlineStatus();
+
+    if (onlineStatus === false) return <Offline />;
+
     return isLoading ? (
         <div className="body">
             <Shimmer type="pill" count={6} />
@@ -176,6 +182,7 @@ const Body = () => {
             </div>
         </div>
     );
+
 };
 
 export default Body;

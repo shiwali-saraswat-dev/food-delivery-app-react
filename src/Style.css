@@ -1395,3 +1395,117 @@ body {
     }
 }
 /* ------------------------- Restaurant Menu ends ----------------------- */
+
+/* ------------------------- Offline Status(Body) starts ----------------------- */
+.offline {
+  min-height: 60vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 20px;
+  text-align: center;
+  background: #fffaf0;
+}
+
+.offline__plate {
+  display: grid;
+  place-items: center;
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  color: #c8962e;
+  background: #fff;
+  border: 2px dashed #e6c26a;
+  margin-bottom: 8px;
+}
+
+.offline__title {
+  margin: 0;
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: #222;
+}
+
+.offline__text {
+  margin: 0;
+  max-width: 42ch;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: #666;
+}
+
+.offline__btn {
+  margin-top: 12px;
+  padding: 11px 28px;
+  border: 0;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: linear-gradient(135deg, #e0b423, #c8962e);
+  box-shadow: 0 4px 12px rgba(200, 150, 46, 0.35);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.offline__btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(200, 150, 46, 0.45);
+}
+
+.offline__btn:focus-visible {
+  outline: 3px solid #222;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offline__btn {
+    transition: none;
+  }
+}
+/* ------------------------- Offline Status(Body) ends ----------------------- */
+
+/* ------------------------- Offline Badge(Header) starts ----------------------- */
+.offline-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #922b21;
+  background: #fdecea;
+  border: 1px solid #f1b5ae;
+}
+
+.offline-badge__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #c0392b;
+  animation: offline-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes offline-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(192, 57, 43, 0); }
+}
+
+.offline-banner {
+  padding: 8px 16px;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #fff;
+  background: #c0392b;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .offline-badge__dot {
+    animation: none;
+  }
+}
+/* ------------------------- Offline Badge(Header) ends ----------------------- */
