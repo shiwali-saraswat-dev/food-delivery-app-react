@@ -275,6 +275,11 @@ body {
     background-color: #e23744;
     color: #ffffff;
 }
+
+.category-filter {
+  grid-column: 1 / -1; /* span the full grid row */
+  width: 100%;
+}
 /* ------------------------- Filter ends ---------------------- */
 
 /* --------------------- Category Chips starts ------------------- */

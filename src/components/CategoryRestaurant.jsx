@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams, Link } from "react-router";
+import Filter from "./Filter";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 import { SWIGGY_CATEGORY_API } from "../utils/constants.js";
+import useRestaurantFilters from "../utils/useRestaurantFilters";
 
 const CategoryRestaurant = () => {
     const { catId } = useParams();
@@ -13,6 +15,9 @@ const CategoryRestaurant = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [matchedRestaurants, setMatchedRestaurants] = useState([]);
     const [loadError, setLoadError] = useState(false);
+
+    // Filters apply only to THIS category's restaurants (search within the category)
+    const { filteredRestaurants, filterProps } = useRestaurantFilters(matchedRestaurants);
 
     useEffect(() => {
         loadCategoryRestaurants();
@@ -43,10 +48,8 @@ const CategoryRestaurant = () => {
                 .map((c) => c?.card?.card)
                 .filter((r) => r?.info);
 
-            // console.log("Restaurants extracted:", catRestsData.length);
             setMatchedRestaurants(catRestsData);
         } catch (err) {
-            // console.error("Failed to load category restaurants:", err);
             setMatchedRestaurants([]);
             setLoadError(true);
         } finally {
@@ -54,10 +57,19 @@ const CategoryRestaurant = () => {
         }
     };
 
+    // Filters only make sense once there are restaurants to filter
+    const showFilters = !isLoading && !loadError && matchedRestaurants.length > 0;
+
     return (
         <div className="res-container">
             <Link to="/" className="category-back-link">← Back to Home</Link>
             <h1>{displayName} Restaurants</h1>
+
+            {showFilters && (
+                <div className="category-filter">
+                    <Filter {...filterProps} />
+                </div>
+            )}
 
             {isLoading ? (
                 <Shimmer type="card" count={5} />
@@ -65,8 +77,10 @@ const CategoryRestaurant = () => {
                 <p>Couldn't load "{displayName}" restaurants right now — check the console for details.</p>
             ) : matchedRestaurants.length === 0 ? (
                 <p>No restaurants found for "{displayName}" right now.</p>
+            ) : filteredRestaurants.length === 0 ? (
+                <p>No {displayName} restaurants match your search.</p>
             ) : (
-                matchedRestaurants.map((restaurant) => (
+                filteredRestaurants.map((restaurant) => (
                     <RestaurantCard key={restaurant.info.id} restData={restaurant.info} />
                 ))
             )}
