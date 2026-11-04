@@ -20,6 +20,7 @@ import About from "./components/About";
 import Contact from "./components/Contact";
 import Error from "./components/Error";
 import CategoryRestaurant from "./components/CategoryRestaurant";
+import RestaurantMenu from "./components/RestaurantMenu";
 
 /**
  * 
@@ -86,6 +87,10 @@ const appRouter = createBrowserRouter(
                 {
                     path: "/category/:catId", // /food-delivery-app-react/category/123
                     element: <CategoryRestaurant />,
+                },
+                {
+                    path: "/restaurant/:resId",
+                    element: <RestaurantMenu />, // /food-delivery-app-react/restaurant/123
                 }
             ],
             errorElement: <Error />,  // shown on 404 or any route-level error
