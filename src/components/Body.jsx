@@ -6,24 +6,19 @@ import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import Shimmer from "./Shimmer";
 import { SWIGGY_HOME_API } from "../utils/constants.js";
 import useOnlineStatus from "../utils/useOnlineStatus";
+import useRestaurantFilters from "../utils/useRestaurantFilters";
 import Offline from "./Offline";
 
 const Body = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [categoriesList, setCategoriesList] = useState([]);
 
-    // The ONE untouched source of truth — never filtered/mutated directly
+    // The original, untouched restaurants list. Filtering happens inside the hook.
     const [allRestaurantsList, setAllRestaurantsList] = useState([]);
-
-    // The ONE list actually rendered — always derived from allRestaurantsList
-    const [filteredRestaurants, setFilteredRestaurants] = useState([]);
-
     const [topRestChainsList, setTopRestChainsList] = useState([]);
 
-    // Filter state — lifted here so BOTH the button's active look
-    // AND the actual filtering logic share the same source of truth
-    const [isTopRatedActive, setIsTopRatedActive] = useState(false);
-    const [searchText, setSearchText] = useState("");
+    const { filteredRestaurants, filterProps } = useRestaurantFilters(allRestaurantsList);
+    const onlineStatus = useOnlineStatus();
 
     useEffect(() => {
         fetchData();
@@ -36,76 +31,24 @@ const Body = () => {
         const categoryCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "whats_on_your_mind"
         );
-        const catData = categoryCard?.card?.card?.imageGridCards?.info || [];
-        setCategoriesList(catData);
+        setCategoriesList(categoryCard?.card?.card?.imageGridCards?.info || []);
 
         const restaurantCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
         );
-        const restData = restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-
-        setAllRestaurantsList(restData);   // untouched original
-        setFilteredRestaurants(restData);  // initially, show everything
+        setAllRestaurantsList(
+            restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || []
+        );
 
         const topChainCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.id === "top_brands_for_you"
         );
-        const topChainData = topChainCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
-        setTopRestChainsList(topChainData);
+        setTopRestChainsList(
+            topChainCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || []
+        );
 
         setIsLoading(false);
     };
-
-    /**
-     * Recomputes filteredRestaurants from scratch, starting from the
-     * ORIGINAL allRestaurantsList every time — never filters on top of
-     * a previously filtered list. This is what makes toggling rating
-     * filter + typing a search term compose correctly together,
-     * instead of compounding or going stale.
-     */
-    const applyFilters = (topRatedOn, text) => {
-        let result = allRestaurantsList;
-
-        if (topRatedOn) {
-            result = result.filter((r) => r.info?.avgRating >= 4.5);
-        }
-
-        if (text.trim()) {
-            const query = text.trim().toLowerCase();
-            result = result.filter((r) => r.info?.name?.toLowerCase().includes(query));
-        }
-
-        setFilteredRestaurants(result);
-    };
-
-    // Toggles the "Top Rated" filter on/off, re-applying search on top
-    const handleTopRatedFilter = () => {
-        const next = !isTopRatedActive;
-        setIsTopRatedActive(next);
-        applyFilters(next, searchText);
-    };
-
-    // Just updates the input's value as the user types (controlled input)
-    const handleSearchChange = (text) => {
-        setSearchText(text);
-        applyFilters(isTopRatedActive, text); // filter immediately with the fresh value
-    };
-
-    // Triggered on search button click / Enter key
-    // — re-applies both rating filter + the current search text together
-    const handleSearch = () => {
-        applyFilters(isTopRatedActive, searchText);
-    };
-
-    // Full reset — clears search text, turns off rating filter,
-    // restores the displayed list back to the original untouched data
-    const resetFilter = () => {
-        setSearchText("");
-        setIsTopRatedActive(false);
-        setFilteredRestaurants(allRestaurantsList);
-    };
-
-    const onlineStatus = useOnlineStatus();
 
     if (onlineStatus === false) return <Offline />;
 
@@ -129,14 +72,7 @@ const Body = () => {
         </div>
     ) : (
         <div className="body">
-            <Filter
-                searchText={searchText}
-                onSearchChange={handleSearchChange}
-                onSearch={handleSearch}
-                isTopRatedActive={isTopRatedActive}
-                onToggleTopRated={handleTopRatedFilter}
-                onReset={resetFilter}
-            />
+            <Filter {...filterProps} />
 
             <div className="cat-container">
                 <h1>Inspiration for your first order</h1>
@@ -182,7 +118,6 @@ const Body = () => {
             </div>
         </div>
     );
-
 };
 
 export default Body;
