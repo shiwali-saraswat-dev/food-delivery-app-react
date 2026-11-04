@@ -1399,6 +1399,10 @@ body {
         padding-right: 14px;
     }
 }
+
+.menu-back {
+  padding: 40px; /* top gap matches the Category page, left edge moved 7px in */
+}
 /* ------------------------- Restaurant Menu ends ----------------------- */
 
 /* ------------------------- Offline Status(Body) starts ----------------------- */
