@@ -1,5 +1,6 @@
 // Importing React from node-modules (installed via npm) instead of using a CDN <script> link
-import React from "react";
+// lazy -> React.lazy: loads a component's code only when it is first rendered
+import React, { lazy, Suspense } from "react";
 
 // Importing ReactDOM from node-modules (installed via npm) instead of using a CDN <script> link
 // ReactDOM is responsible for rendering React components into the actual DOM
@@ -13,15 +14,25 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router";
 // Import component-specific styles for the Header component
 import "./Style.css";
 
+/*
+ * NOT lazy on purpose: Body (home), Header, Footer, ErrorPage, Shimmer.
+ * The user sees them on first load, so lazy loading them would only add
+ * an extra request and a loading flash.
+ */
 import Header from "./components/Header";
 import Body from "./components/Body";
 import Footer from "./components/Footer";
-import About from "./components/About";
-import Contact from "./components/Contact";
 import Error from "./components/Error";
-import CategoryRestaurant from "./components/CategoryRestaurant";
-import RestaurantMenu from "./components/RestaurantMenu";
 import { OfflineBanner } from "./components/OfflineIndicator";
+
+// About page: rarely visited -> separate chunk, downloaded on first visit to /about
+const About = lazy(() => import('./components/About'));
+// Contact page: rarely visited -> separate chunk, downloaded on first visit to /contact
+const Contact = lazy(() => import('./components/Contact'));
+// Category page: reached only after clicking a category chip -> separate chunk
+const CategoryRestaurant = lazy(() => import('./components/CategoryRestaurant'));
+// Restaurant detail page: the largest page (menu, accordions) -> biggest saving
+const RestaurantMenu = lazy(() => import('./components/RestaurantMenu'));
 
 /**
  * 
@@ -75,27 +86,60 @@ const appRouter = createBrowserRouter(
             element: <AppLayout />,   // persistent shell: Header + Outlet + Footer
             children: [
                 {
+                    // Home page: /food-delivery-app-react/
+                    // Body is imported normally (eager) because it is the first thing the user sees, so lazy loading it would only add a loading flash.
                     path: "/",        // home — renders Body inside Outlet
                     element: <Body />,
                 },
                 {
-                    path: "/about",   // /food-delivery-app-react/about
-                    element: <About />,
+                    // About page: /food-delivery-app-react/about
+                    // About is a lazy component (React.lazy), so its JS chunk downloads on the first visit. 
+                    // <Suspense> is REQUIRED around every lazy component: while the chunk downloads it shows `fallback`, then swaps in <About />.
+                    path: "/about",
+                    element: (
+                        <Suspense fallback={<div>Loading data...</div>}>
+                            <About />
+                        </Suspense>
+                    ),
                 },
                 {
-                    path: "/contact", // /food-delivery-app-react/contact
-                    element: <Contact />,
+                    // Contact page: /food-delivery-app-react/contact
+                    // Same pattern: lazy chunk + Suspense fallback.
+                    path: "/contact",
+                    element:  (
+                        <Suspense fallback={<div>Loading data...</div>}>
+                            <Contact />
+                        </Suspense>
+                    ),
                 },
                 {
-                    path: "/category/:catId", // /food-delivery-app-react/category/123
-                    element: <CategoryRestaurant />,
+                    // Category page: /food-delivery-app-react/category/123
+                    // ":catId" is a DYNAMIC segment: any value is captured and the page
+                    // reads it with useParams() -> { catId: "123" }.
+                    path: "/category/:catId",
+                    element: (
+                        <Suspense fallback={<div>Loading data...</div>}>
+                            <CategoryRestaurant />
+                        </Suspense>
+                    ),
                 },
                 {
+                    // Restaurant detail page: /food-delivery-app-react/restaurant/123
+                    // ":resId" is a dynamic segment too, read with useParams() -> { resId: "123" }.
+                    // Largest page (menu, accordions), so it benefits most from lazy loading.
                     path: "/restaurant/:resId",
-                    element: <RestaurantMenu />, // /food-delivery-app-react/restaurant/123
+                    element: (
+                        <Suspense fallback={<div>Loading data...</div>}>
+                            <RestaurantMenu />
+                        </Suspense>
+                    ),
                 }
             ],
-            errorElement: <Error />,  // shown on 404 or any route-level error
+            // errorElement is shown when:
+            //   - the URL matches no route (404), or
+            //   - a component under this route throws an error while rendering.
+            // It replaces the whole AppLayout, so the Error page appears without Header/Footer.
+            errorElement: <Error />,
         },
     ],
     { basename: "/food-delivery-app-react" } // base path for GitHub Pages deployment
