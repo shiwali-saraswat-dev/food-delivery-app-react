@@ -1,13 +1,16 @@
 import { useState, useEffect } from "react";
 import Filter from "./Filter";
 import CategoryChip from "./CategoryChip";
-import RestaurantCard from "./RestaurantCard";
+import RestaurantCard, { withPromotedLabel} from "./RestaurantCard";
 import TopRestaurantChainCard from "./TopRestaurantChainCard";
 import Shimmer from "./Shimmer";
 import { SWIGGY_HOME_API } from "../utils/constants.js";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import useRestaurantFilters from "../utils/useRestaurantFilters";
 import Offline from "./Offline";
+
+// Created ONCE, outside the component, so it is the same component on every render
+const RestaurantCardPromoted = withPromotedLabel(RestaurantCard);
 
 const Body = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -36,8 +39,22 @@ const Body = () => {
         const restaurantCard = json?.data?.cards?.find(
             (c) => c?.card?.card?.gridElements?.infoWithStyle?.restaurants
         );
+
+        // Pull the array out first. This is the line that was missing.
+        const restaurants =
+            restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || [];
+
+        // DEMO DATA: the API does not send a "promoted" field, so we simulate it.
+        // Every 3rd restaurant (index 0, 3, 6, ...) is marked promoted.
+        // `??` keeps the real value if the API ever starts sending one.
         setAllRestaurantsList(
-            restaurantCard?.card?.card?.gridElements?.infoWithStyle?.restaurants || []
+            restaurants.map((restaurant, index) => ({
+                ...restaurant, // keep everything else unchanged
+                info: {
+                    ...restaurant.info, // copy info (never mutate API data)
+                    promoted: restaurant.info.promoted ?? index % 3 === 0,
+                },
+            }))
         );
 
         const topChainCard = json?.data?.cards?.find(
@@ -85,15 +102,19 @@ const Body = () => {
 
             <div className="res-container">
                 <h1>Food Delivery Restaurants in Delhi NCR</h1>
-                {filteredRestaurants.length === 0 ? (
-                    <p>No restaurants match your search.</p>
-                ) : (
-                    filteredRestaurants
+                {filteredRestaurants.length === 0 ? 
+                    (<p>No restaurants match your search.</p>) 
+                    : ( filteredRestaurants
                         .slice(0, 10)
                         .map((restaurant) => (
-                            <RestaurantCard key={restaurant.info.id} restData={restaurant.info} />
+                            // If the Restaurant is promoted, then add label promoted to it 
+                            restaurant.info.promoted ? 
+                                (<RestaurantCardPromoted key={restaurant.info.id} restData={restaurant.info} />) 
+                                : (<RestaurantCard key={restaurant.info.id} restData={restaurant.info} />) 
+                              
                         ))
-                )}
+                    )
+                }
             </div>
 
             <div className="adds">

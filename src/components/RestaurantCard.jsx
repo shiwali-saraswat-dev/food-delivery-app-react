@@ -23,4 +23,18 @@ const RestaurantCard = ({ restData }) => {
     );
 };
 
+// Higher Order Component (HOC)
+// input - Restaurantcard => RestaurantcardPromoted
+export const withPromotedLabel = (Restaurantcard) => {
+    return (props) => {
+        return (
+            // wrapper is the positioning anchor for the badge
+            <div className="promoted-wrapper">
+                <span className="promoted-badge">Promoted</span>
+                <Restaurantcard {...props} />
+            </div>
+        );
+    };
+};
+
 export default RestaurantCard;
