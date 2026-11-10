@@ -1,18 +1,20 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { LOGO_URL } from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
 
 // NavLink — like <Link> but adds "active" class automatically when its route matches the current URL
 import { NavLink } from "react-router";
 import { OfflineBadge } from "./OfflineIndicator";
+import UserContext from "../utils/UserContext.js";
 
 const Header = () => {
-    // Tracks the current label of the auth button.
-    // "Login" = user is logged out, "Logout" = user is logged in.
-    // (In a real app this should be driven by actual auth state,
-    // not just a button label — see note below.)
-    const [btnNameReact, setBtnNameReact] = useState("Login");
+    // One boolean decides everything: false = Login button, true = username + dropdown.
+    // (Later, move this into Context/Redux so other components can read it too.)
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+
+    // LoggedIn User
+    const userInfo = useContext(UserContext);
 
     // Only listens for Escape while the menu is actually open.
     // (This uses useEffect, not useRef — if you haven't covered
@@ -28,6 +30,19 @@ const Header = () => {
         document.addEventListener("keydown", closeOnEscape);
         return () => document.removeEventListener("keydown", closeOnEscape);
     }, [isUserMenuOpen]);
+
+    // Login: hide the Login button, show the username
+    const handleLogin = () => {
+        // TODO: replace with a real login call (API, token, context update)
+        setIsLoggedIn(true);
+    };
+
+    // Logout: hide the username dropdown, show the Login button
+    const handleLogout = () => {
+        // TODO: replace with a real logout call (clear token, context update)
+        setIsUserMenuOpen(false);   // IMPORTANT: close the menu too, or it reopens on next login
+        setIsLoggedIn(false);
+    };
 
     return (
         <div className="header">
@@ -49,61 +64,64 @@ const Header = () => {
                         <span>Cart</span>
                     </div>
 
-                    <li>
-                        <button
-                            className="login-new"
-                            onClick={() => {
-                                // TODO: this only changes the label — it doesn't perform real
-                                // authentication. Wire this up to your actual login/logout
-                                // logic (API call, context/store update, redirect, etc.) before shipping.
-                                setBtnNameReact((prev) => (prev === "Login" ? "Logout" : "Login"));
-                            }}
-                        >
-                            {btnNameReact}
-                        </button>
-                    </li>
+                    {/* Logged OUT -> show the Login button */}
+                    {!isLoggedIn && (
+                        <li>
+                            <button className="login-new" onClick={handleLogin}>
+                                Login
+                            </button>
+                        </li>
+                    )}
 
-                    <li className="user-menu">
-                        <button
-                            className="user-trigger"
-                            aria-haspopup="true"
-                            aria-expanded={isUserMenuOpen}
-                            onClick={() => setIsUserMenuOpen((prev) => !prev)}
-                        >
-                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
-                                strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-                                style={{ stroke: "#e6cd26" }}   // ← inline style wins over external stylesheet rules
+                    {/* Logged IN -> show username with dropdown */}
+                    {isLoggedIn && (
+                        <li className="user-menu">
+                            <button
+                                className="user-trigger"
+                                aria-haspopup="true"
+                                aria-expanded={isUserMenuOpen}
+                                onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                            >
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+                                    strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+                                    style={{ stroke: "#e6cd26" }}
                                 >
-                                <circle cx="12" cy="8" r="4" />
-                                <path d="M4 20c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
-                            </svg>
-                            <span className="user-name">John Doe</span>
-                        </button>
+                                    <circle cx="12" cy="8" r="4" />
+                                    <path d="M4 20c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5" />
+                                </svg>
+                                {/* Plain text now: no extra onClick here, the button already toggles the menu */}
+                                <span className="user-name">{ userInfo.user.email }</span>
+                            </button>
 
-                        {isUserMenuOpen && (
-                            <>
-                                {/* Invisible full-screen layer. Clicking anywhere
-                                    that isn't the button or the menu itself hits
-                                    this and closes the dropdown — no ref needed. */}
-                                <div
-                                    className="dropdown-backdrop"
-                                    onClick={() => setIsUserMenuOpen(false)}
-                                />
-                                <div className="dropdown" role="menu" aria-label="Account menu">
-                                    <div className="arrow-outer" />
-                                    <div className="arrow-inner" />
+                            {isUserMenuOpen && (
+                                <>
+                                    {/* Invisible full-screen layer: clicking outside closes the menu */}
+                                    <div
+                                        className="dropdown-backdrop"
+                                        onClick={() => setIsUserMenuOpen(false)}
+                                    />
+                                    <div className="dropdown" role="menu" aria-label="Account menu">
+                                        <div className="arrow-outer" />
+                                        <div className="arrow-inner" />
                                         <a href="#" className="dropdown-item" role="menuitem">Profile</a>
-                                        <a href="#" className="dropdown-item" role="menuitem">orders</a>
-                                        <a href="#" className="dropdown-item" role="menuitem">Logout</a>
-                                </div>
-                            </>
-                        )}
-                    </li>
+                                        <a href="#" className="dropdown-item" role="menuitem">Orders</a>
+                                        <a href="#" className="dropdown-item" role="menuitem"
+                                            onClick={(e) => {
+                                                e.preventDefault();   // stop "#" from jumping to the page top
+                                                handleLogout();
+                                            }}
+                                        >
+                                            Logout
+                                        </a>
+                                    </div>
+                                </>
+                            )}
+                        </li>
+                    )}
                 </ul>
             </div>
-
         </div>
-    )
+    );
 };
 
 export default Header; // Default export so Header can be imported without curly braces
