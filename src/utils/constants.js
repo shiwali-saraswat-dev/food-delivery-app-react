@@ -13,9 +13,9 @@ export const CAT_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/
 
 export const REST_IMG_URL = "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
-// Base coordinates — Delhi NCR (update to dynamic user location later)
-export const LAT = "28.63270";
-export const LNG = "77.21980";
+// Base coordinates — Sector 117, Noida (update to dynamic user location later)
+export const LAT = "28.578703";
+export const LNG = "77.3970354";
 
 // Home page — fetches restaurant listing and category chips
 export const SWIGGY_HOME_API = `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING`;
@@ -24,10 +24,11 @@ export const SWIGGY_HOME_API = `https://www.swiggy.com/dapi/restaurants/list/v5?
 export const SWIGGY_CATEGORY_API = (catId, tags = "") =>
     `https://www.swiggy.com/dapi/restaurants/list/v5?lat=${LAT}&lng=${LNG}&collection=${catId}&tags=${encodeURIComponent(tags)}&sortBy=&filters=&type=rcv2&offset=0`;
 
-export const SWIGGY_RESTAURANT_API = (resId) => 
-    `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${resId}&catalog_qa=undefined`;
+const MENU_QUERY = (resId) =>
+  `page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${resId}&catalog_qa=undefined&submitAction=ENTER`;
 
-export const MENU_API = (resId) =>
-  `https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=${LAT}&lng=${LNG}&restaurantId=${resId}&catalog_qa=undefined&submitAction=ENTER`;
-
-export const SWIGGY_RESTAURANT_MENU = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=28.5807394&lng=77.3982086&restaurantId=392432&catalog_qa=undefined&query=Chole%20Bhature&submitAction=ENTER";
+// Tried in order by useRestaurantMenu
+export const MENU_API_URLS = (resId) => [
+  `https://www.swiggy.com/mapi/menu/pl?${MENU_QUERY(resId)}`,
+  `https://www.swiggy.com/dapi/menu/pl?${MENU_QUERY(resId)}`,
+];
