@@ -1518,3 +1518,30 @@ body {
   }
 }
 /* ------------------------- Offline Badge(Header) ends ----------------------- */
+
+
+/* ------------------------- Promoted Badge starts ----------------------- */
+.promoted-wrapper {
+    position: relative;
+    display: inline-block;
+}
+
+/* The badge itself */
+.promoted-badge {
+    position: absolute;
+    top: 14px;
+    left: 0;
+    z-index: 2;
+
+    padding: 5px 12px 5px 10px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    color: #fff;
+    background: linear-gradient(90deg, #ff5a5f, #ff7a5c);
+    border-radius: 0 8px 8px 0;
+    box-shadow: 0 2px 6px rgba(255, 90, 95, 0.35);
+
+    pointer-events: none;
+}
+/* ------------------------- Promoted Badge ends ----------------------- */
