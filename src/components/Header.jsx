@@ -103,7 +103,11 @@ const Header = () => {
                                     <div className="dropdown" role="menu" aria-label="Account menu">
                                         <div className="arrow-outer" />
                                         <div className="arrow-inner" />
-                                        <a href="#" className="dropdown-item" role="menuitem">Profile</a>
+                                        <NavLink to="/profile" className="dropdown-item" role="menuitem"
+                                            onClick={() => setIsUserMenuOpen(false)} // close the dropdown after navigating
+                                        >
+                                            Profile
+                                        </NavLink>
                                         <a href="#" className="dropdown-item" role="menuitem">Orders</a>
                                         <a href="#" className="dropdown-item" role="menuitem"
                                             onClick={(e) => {

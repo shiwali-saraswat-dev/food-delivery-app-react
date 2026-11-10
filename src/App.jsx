@@ -25,6 +25,8 @@ import Footer from "./components/Footer";
 import Error from "./components/Error";
 import { OfflineBanner } from "./components/OfflineIndicator";
 
+// Profile page: rarely visited -> separate chunk
+const Profile = lazy(() => import('./components/Profile'));
 // About page: rarely visited -> separate chunk, downloaded on first visit to /about
 const About = lazy(() => import('./components/About'));
 // Contact page: rarely visited -> separate chunk, downloaded on first visit to /contact
@@ -90,6 +92,15 @@ const appRouter = createBrowserRouter(
                     // Body is imported normally (eager) because it is the first thing the user sees, so lazy loading it would only add a loading flash.
                     path: "/",        // home — renders Body inside Outlet
                     element: <Body />,
+                },
+                {
+                    // Profile page: /food-delivery-app-react/profile
+                    path: "/profile",
+                    element:  (
+                        <Suspense fallback={<div>Loading data...</div>}>
+                            <Profile />
+                        </Suspense>
+                    ),
                 },
                 {
                     // About page: /food-delivery-app-react/about
