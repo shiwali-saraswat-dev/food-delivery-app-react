@@ -24,6 +24,12 @@ import Body from "./components/Body";
 import Footer from "./components/Footer";
 import Error from "./components/Error";
 import { OfflineBanner } from "./components/OfflineIndicator";
+import Cart from "./components/Cart";
+
+// Provider: makes the Redux store available to every component in the app
+import { Provider } from "react-redux";
+// appStore: the configured Redux store (holds the cart state)
+import appStore from "./utils/appStore";
 
 // Profile page: rarely visited -> separate chunk
 const Profile = lazy(() => import('./components/Profile'));
@@ -40,12 +46,16 @@ const RestaurantMenu = lazy(() => import('./components/RestaurantMenu'));
  * 
  * Header
  * - Logo
- * // - Search Bar
+ * - Offline Badge
  * - Nav Items
- * //- User Icon
+ * - Cart
+ * - Login / Logout - user_email
  * 
  * Body
  * - Search
+ * - Offline Banner
+ * - Category Listing
+ *   - Categorywise Restaurants Listing
  * - Restaurant Container
  *  - Restaurant Card
  *  - Dish Name
@@ -54,6 +64,8 @@ const RestaurantMenu = lazy(() => import('./components/RestaurantMenu'));
  *  - Rating
  *  - Cuisines
  *  - Time to Deliver
+ *  - Promoted label
+ * - Restaurant Detail Page
  * - Adds
 
  * Footer
@@ -68,12 +80,14 @@ const RestaurantMenu = lazy(() => import('./components/RestaurantMenu'));
 // Header and Footer render on all routes; Outlet swaps in the matched child route
 const AppLayout = () => {
     return (
-        <div className="app">
-            <Header />
-            <OfflineBanner />
-            <Outlet /> {/* matched child route renders here — Body / About / Contact */}
-            <Footer />
-        </div>
+        <Provider store={ appStore }>
+            <div className="app">
+                <Header />
+                <OfflineBanner />
+                <Outlet /> {/* matched child route renders here — Body / About / Contact */}
+                <Footer />
+            </div>
+        </Provider>
     );
 };
 
@@ -144,6 +158,11 @@ const appRouter = createBrowserRouter(
                             <RestaurantMenu />
                         </Suspense>
                     ),
+                },
+                {
+                    // Cart page: /food-delivery-app-react/cart
+                    path: "/cart",
+                    element: <Cart />,
                 }
             ],
             // errorElement is shown when:
