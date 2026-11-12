@@ -1,10 +1,11 @@
 import { useState, useEffect, useContext } from "react";
 import { LOGO_URL } from "../utils/constants.js"; // Import the app logo URL from the centralized constants file
-
 // NavLink — like <Link> but adds "active" class automatically when its route matches the current URL
 import { NavLink } from "react-router";
 import { OfflineBadge } from "./OfflineIndicator";
 import UserContext from "../utils/UserContext.js";
+// useSelector: subscribes this component to the Redux store and re-renders it when the selected data changes
+import { useSelector } from "react-redux";
 
 const Header = () => {
     // One boolean decides everything: false = Login button, true = username + dropdown.
@@ -15,6 +16,13 @@ const Header = () => {
 
     // LoggedIn User
     const userInfo = useContext(UserContext);
+
+    // Subscribing to the store using a Selector
+    const cartItems = useSelector((store) => store.cart.items);
+    // console.log("header - cartItems: ", cartItems);
+
+    // Total quantity across all rows (items without qty count as 1)
+    const totalQty = cartItems.reduce((sum, item) => sum + (item.qty ?? 1), 0);
 
     // Only listens for Escape while the menu is actually open.
     // (This uses useEffect, not useRef — if you haven't covered
@@ -60,8 +68,8 @@ const Header = () => {
                     <li><OfflineBadge /></li>
 
                     <div className="cart">
-                        <div className="cart-badge">0</div>
-                        <span>Cart</span>
+                        <div className="cart-badge">{totalQty}</div>
+                        <span><NavLink to="/cart">Cart</NavLink ></span>
                     </div>
 
                     {/* Logged OUT -> show the Login button */}
